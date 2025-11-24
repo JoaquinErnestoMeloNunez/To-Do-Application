@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace To_Do_Annotations.Presentation
 {
     public class Program
@@ -6,6 +8,9 @@ namespace To_Do_Annotations.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<To_Do_Annotations.Persistence.Database.AppContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Context"))
+            );
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -22,9 +27,12 @@ namespace To_Do_Annotations.Presentation
 
             app.UseAuthorization();
 
+            /*app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");*/
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Tasks}/{action=Index}/{id?}");
 
             app.Run();
         }
