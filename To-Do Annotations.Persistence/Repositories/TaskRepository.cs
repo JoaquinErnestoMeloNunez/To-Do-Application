@@ -48,9 +48,18 @@ namespace To_Do_Annotations.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(ToDoTask task)
+        public async Task UpdateAsync(ToDoTask task)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Entry(task).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating the task with ID {TaskId}", task.Id);
+                throw new Exception($"Error updating the task with ID {task.Id}.", ex);
+            }
         }
     }
 }
