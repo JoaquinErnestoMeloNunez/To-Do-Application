@@ -33,9 +33,22 @@ namespace To_Do_Annotations.Persistence.Repositories
             }
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var task = await _context.Tasks.FindAsync(id);
+                if (task != null)
+                {
+                    _context.Tasks.Remove(task);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting de task with ID {TaskId}", id);
+                throw new Exception($"Error while deleting de task with ID {id}.", ex);
+            }
         }
 
         public Task<IEnumerable<ToDoTask>> GetAllAsync()
