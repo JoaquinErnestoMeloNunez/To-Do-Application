@@ -51,14 +51,30 @@ namespace To_Do_Annotations.Persistence.Repositories
             }
         }
 
-        public Task<IEnumerable<ToDoTask>> GetAllAsync()
+        public async Task<IEnumerable<ToDoTask>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Tasks.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting the task list.");
+                throw new Exception("Error while getting the task list.", ex);
+            }
         }
 
-        public Task<ToDoTask?> GetByIdAsync(int id)
+        public async Task<ToDoTask?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Tasks.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while searching the task with ID {TaskId}", id);
+                throw new Exception($"Error while searching the task with ID {id}.", ex);
+            }
         }
 
         public async Task UpdateAsync(ToDoTask task)
