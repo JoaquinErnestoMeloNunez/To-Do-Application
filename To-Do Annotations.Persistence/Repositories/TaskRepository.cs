@@ -19,9 +19,18 @@ namespace To_Do_Annotations.Persistence.Repositories
             _logger = logger;
         }
 
-        public Task AddAsync(ToDoTask task)
+        public async Task AddAsync(ToDoTask task)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Tasks.AddAsync(task);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while creating the task {TaskTitle}", task.Title);
+                throw new Exception("Error while creating the task in the Database", ex);
+            }
         }
 
         public Task DeleteAsync(int id)
